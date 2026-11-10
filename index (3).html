@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Status</title>
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    background: #0b0b0b;
+  }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #kod {
+    font-family: "Courier New", monospace;
+    font-size: clamp(40px, 12vw, 160px);
+    letter-spacing: 0.05em;
+    color: #00ff00;
+    text-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
+  }
+</style>
+</head>
+<body>
+  <div id="kod">...</div>
+
+<script>
+  // Liczba jest wczytywana z pliku status.txt (w tym samym folderze).
+  // Zmieniasz zawartość status.txt na GitHubie -> strona sama się odświeży.
+  const ODSWIEZ_CO_MS = 5000;
+
+  async function wczytaj() {
+    try {
+      const r = await fetch("status.txt?t=" + Date.now(), { cache: "no-store" });
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      const tekst = (await r.text()).trim();
+      document.getElementById("kod").textContent = tekst || "-";
+    } catch (e) {
+      // przy błędzie zostaw poprzednią wartość
+    }
+  }
+
+  wczytaj();
+  setInterval(wczytaj, ODSWIEZ_CO_MS);
+</script>
+</body>
+</html>
